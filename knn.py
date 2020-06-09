@@ -1,4 +1,5 @@
 from collections import Counter
+from normalization import *
 
 
 class KNN:
@@ -17,6 +18,7 @@ class KNN:
         :param k: new k
         :param norm: new distance norm
         """
+
         self._points = []
         self._k = k
         self._norm = norm
@@ -26,6 +28,7 @@ class KNN:
         trains the model
         :param training_points: list of Point to use for training
         """
+
         self._points = list(training_points)
 
     def predict(self, testing_points):

@@ -1,11 +1,12 @@
 import random
+import statistics
 
 
 class CrossValidation:
     def __init__(self):
         self._folds = []
 
-    def run_cv(self, data, n_folds, classifier, scoring_function, print_final_score=True, print_fold_score=False):
+    def run_cv(self, data, n_folds, classifier, scoring_function, print_final_score=False, print_fold_score=True):
         """
         Runs cross validation
         :param n_folds: number of folds(int)
@@ -20,6 +21,7 @@ class CrossValidation:
         self._folds = []
         random.seed(0)
         shuffled = list(data)
+        fold_acc_kist = list()
         random.shuffle(shuffled)
         fold_size = round(len(data) / n_folds)
         for i in range(n_folds):
@@ -44,8 +46,10 @@ class CrossValidation:
             average_score += score
             if print_fold_score:
                 print('{} of fold {} : {:.2f}'.format(scoring_function.__name__, out_fold_index, score))
-
+                fold_acc_kist.append(score)
         average_score /= n_folds
         if print_final_score:
             print(scoring_function.__name__, average_score)
-        return average_score
+        # return average_score
+        # print("Variance: ",statistics.variance(fold_acc_kist))
+        return fold_acc_kist
