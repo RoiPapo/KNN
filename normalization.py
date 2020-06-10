@@ -45,8 +45,8 @@ class MinMax:
         new = []
         for i, p in enumerate(points):
             new_coordinates = p.coordinates
-            for cordinate in new_coordinates:
-                cordinate = (cordinate - self.min_list[i]) / (self.max_list[i] - self.min_list[i])
+            for cordinat in new_coordinates:
+                cordinat = (cordinat - self.min_list[i]) / (self.max_list[i] - self.min_list[i])
             new.append(Point(p.name, new_coordinates, p.label))
         return new
 
