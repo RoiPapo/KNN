@@ -39,7 +39,7 @@ def create_classifiers(k, points):
     score_dict = {}
     for i in range(k):
         print("for K number:", i + 1)
-        list_of_classifiers[i + 1] = (KNN(i + 1,2))
+        list_of_classifiers[i + 1] = (KNN(i + 1, 2))
         list_of_classifiers[i + 1].train(points)
         cv = CrossValidation()
         score_dict[i + 1] = cv.run_cv(points, 10, list_of_classifiers[i + 1], accuracy_score)
@@ -47,37 +47,35 @@ def create_classifiers(k, points):
     print(score_dict)
 
 
-def test_Folds(list_of_foldnums, cv, points, m, k , print_final_score=False):
-    print('K=%d' % k)
+def test_Folds(list_of_foldnums, cv, points, m,norm, print_final_score=False):
     for i in range(len(list_of_foldnums)):
         temp = []
-        print('%d-fold-cross-validation:' % list_of_foldnums[i])
+        # print('%d-fold-cross-validation:' % list_of_foldnums[i])
         # print(list_of_foldnums[i],"-fold-cross-validation:")
         temp.append(cv.run_cv(points, list_of_foldnums[i], m, accuracy_score, print_final_score))
+        print (temp,str(norm))
 
 
-def normalized_check(points, k_list):
+def normalized_check(points, k_list, normalize_method_list):
     for k in k_list:
-        m = KNN(k,2)
-        # if self._norm == 2:
-        znurm = ZNormalizer()
-        znurm.fit(points)
-        new = znurm.transform(points)
-        m.train(new)
-        cv = CrossValidation()
-        test_Folds([2], cv, points, m, k , print_final_score=True)
+        print('K=%d' % k)
+        for norm in normalize_method_list:
+            m = KNN(k, norm)
+            # m.train(points)
+            cv = CrossValidation()
+            test_Folds([2], cv, points, m,norm, print_final_score=False)
 
 
 def run_knn(points):
-    m = KNN(19)
+    # m = KNN(19)
 
-    m.train(points)
+    # m.train(points)
     # print(f'predicted class: {m.predict(points[0])}')
     # print(f'true class: {points[0].label}')
-    cv = CrossValidation()
+    # cv = CrossValidation()
     # test_Folds([2, 10, 20], cv, points, m)
     # print(temp)
-    normalized_check(points, [5, 7])
+    normalized_check(points, [5, 7], [0, 1, 2, 3])
 
 
 if __name__ == '__main__':

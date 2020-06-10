@@ -19,7 +19,7 @@ class ZNormalizer:
         self.mean_variance_list = []
         for i in range(len(all_coordinates[0])):
             values = [x[i] for x in all_coordinates]
-            self.mean_variance_list.append([mean(values), var(values, ddof=1)**0.5])
+            self.mean_variance_list.append([mean(values), var(values, ddof=1) ** 0.5])
 
     def transform(self, points):
         new = []
@@ -36,17 +36,19 @@ class MinMax:
         self.list_for_normalize = points
         v = self.list_for_normalize[:, 1]  # foo[:, -1] for the last column
         self.list_for_normalize[:, 1] = (v - v.min()) / (v.max() - v.min())
+        return self.list_for_normalize
 
 
 class SumNormalizer:
-    def __init__(self):
-        self.normalized_list = []
+    # def __init__(self):
+    #     self.normalized_list = []
 
     def sum_normalizing(self, points):
         coordinate_sum = 0
+        normalized_list = []
         for point in points:
-            for coordinate in point:
+            for coordinate in point.coordinates:
                 coordinate_sum += abs(coordinate)
-            self.normalized_list.append(coordinate_sum)
+            normalized_list.append(coordinate_sum)
             coordinate_sum = 0
-        return self.normalized_list
+        return normalized_list
