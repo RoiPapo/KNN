@@ -1,5 +1,4 @@
 from collections import Counter
-from normalization import *
 
 
 class KNN:
@@ -18,7 +17,6 @@ class KNN:
         :param k: new k
         :param norm: new distance norm
         """
-
         self._points = []
         self._k = k
         self._norm = norm
@@ -28,23 +26,6 @@ class KNN:
         trains the model
         :param training_points: list of Point to use for training
         """
-        if self._norm == 0:
-            print("dummy")
-            da= DummyNormalizer()
-            training_points = da.transform(training_points)
-        if self._norm == 1:
-            print("SumNormalizer")
-            sm= SumNormalizer()
-            # training_points = sm.sum_normalizing(training_points)
-
-        if self._norm == 2:
-            print("MinMaxNormalizer")
-
-        if self._norm == 3:
-            print("ZNormalizer")
-            zn=ZNormalizer();
-            zn.fit(training_points);
-            training_points= zn.transform( training_points)
         self._points = list(training_points)
 
     def predict(self, testing_points):

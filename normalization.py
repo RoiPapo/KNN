@@ -32,23 +32,38 @@ class ZNormalizer:
 
 
 class MinMax:
+    def __init__(self):
+        self.min_list = []
+        self.max_list = []
+
+    def fit(self, points):
+        for point in points:
+            self.max_list.append(max(point.coordinates))
+            self.min_list.append(min(point.coordinates))
+
     def transform(self, points):
-        self.list_for_normalize = points
-        v = self.list_for_normalize[:, 1]  # foo[:, -1] for the last column
-        self.list_for_normalize[:, 1] = (v - v.min()) / (v.max() - v.min())
-        return self.list_for_normalize
+        new = []
+        for i, p in enumerate(points):
+            new_coordinates = p.coordinates
+            for cordinate in new_coordinates:
+                cordinate = (cordinate - self.min_list[i]) / (self.max_list[i] - self.min_list[i])
+            new.append(Point(p.name, new_coordinates, p.label))
+        return new
 
 
 class SumNormalizer:
-    # def __init__(self):
-    #     self.normalized_list = []
+    def __init__(self):
+        self.normalized_list = []
 
-    def sum_normalizing(self, points):
+    def fit(self, points):
+        pass
+
+    def transform(self, points):
         coordinate_sum = 0
-        normalized_list = []
         for point in points:
             for coordinate in point.coordinates:
                 coordinate_sum += abs(coordinate)
-            normalized_list.append(coordinate_sum)
+            point.coordinates = coordinate_sum
+            self.normalized_list.append(point)
             coordinate_sum = 0
-        return normalized_list
+        return self.normalized_list

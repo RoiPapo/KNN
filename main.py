@@ -59,11 +59,13 @@ def test_Folds(list_of_foldnums, cv, points, m,norm, print_final_score=False):
 def normalized_check(points, k_list, normalize_method_list):
     for k in k_list:
         print('K=%d' % k)
+        m = KNN(k)
         for norm in normalize_method_list:
-            m = KNN(k, norm)
-            # m.train(points)
+            norm_obj = norm()
+            norm_obj.fit(points)
+            normelized_points= norm_obj.transform(points)
             cv = CrossValidation()
-            test_Folds([2], cv, points, m,norm, print_final_score=False)
+            test_Folds([2], cv, normelized_points, m, norm, print_final_score=False)
 
 
 def run_knn(points):
@@ -75,8 +77,8 @@ def run_knn(points):
     # cv = CrossValidation()
     # test_Folds([2, 10, 20], cv, points, m)
     # print(temp)
-    normalized_check(points, [5, 7], [0, 1, 2, 3])
-
+    # normalized_check(points, [5, 7], [DummyNormalizer, SumNormalizer, MinMax, ZNormalizer])
+    normalized_check(points, [5, 7], [DummyNormalizer, ZNormalizer, MinMax])
 
 if __name__ == '__main__':
     loaded_points = load_data()
