@@ -31,39 +31,44 @@ class ZNormalizer:
         return new
 
 
-class MinMax:
+class MinMaxNormalizer:
     def __init__(self):
         self.min_list = []
         self.max_list = []
 
     def fit(self, points):
-        for point in points:
-            self.max_list.append(max(point.coordinates))
-            self.min_list.append(min(point.coordinates))
+        all_coordinates = [p.coordinates for p in points]
+        self.max_list = []
+        self.min_list = []
+        for i in range(len(all_coordinates[0])):
+            values = [x[i] for x in all_coordinates]
+            self.min_list.append(min(values))
+            self.max_list.append(max(values))
 
     def transform(self, points):
         new = []
-        for i, p in enumerate(points):
+        for p in points:
             new_coordinates = p.coordinates
-            for cordinat in new_coordinates:
-                cordinat = (cordinat - self.min_list[i]) / (self.max_list[i] - self.min_list[i])
+            new_coordinates = [(new_coordinates[i] - self.min_list[i]) / (self.max_list[i] - self.min_list[i]) for i in
+                range(len(p.coordinates))]
             new.append(Point(p.name, new_coordinates, p.label))
         return new
 
 
 class SumNormalizer:
     def __init__(self):
-        self.normalized_list = []
+        self.sum_of_coordinates = []
 
     def fit(self, points):
-        pass
+        all_coordinates = [p.coordinates for p in points]
+        for i in range(len(all_coordinates[0])):
+            value = sum([abs(x[i]) for x in all_coordinates])
+            self.sum_of_coordinates.append(value)
 
     def transform(self, points):
-        coordinate_sum = 0
-        for point in points:
-            for coordinate in point.coordinates:
-                coordinate_sum += abs(coordinate)
-            point.coordinates = coordinate_sum
-            self.normalized_list.append(point)
-            coordinate_sum = 0
-        return self.normalized_list
+        new = []
+        for p in points:
+            new_coordinates = p.coordinates
+            new_coordinates = [new_coordinates[i] / self.sum_of_coordinates[i] for i in range(len(p.coordinates))]
+            new.append(Point(p.name, new_coordinates, p.label))
+        return new

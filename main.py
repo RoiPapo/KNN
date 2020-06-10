@@ -47,13 +47,21 @@ def create_classifiers(k, points):
     print(score_dict)
 
 
-def test_Folds(list_of_foldnums, cv, points, m,norm, print_final_score=False):
+def question3(list_of_foldnums, cv, points, m, k, print_final_score=False):
+    print('K=%d' % k)
     for i in range(len(list_of_foldnums)):
         temp = []
-        # print('%d-fold-cross-validation:' % list_of_foldnums[i])
+        print('%d-fold-cross-validation:' % list_of_foldnums[i])
         # print(list_of_foldnums[i],"-fold-cross-validation:")
         temp.append(cv.run_cv(points, list_of_foldnums[i], m, accuracy_score, print_final_score))
-        print (temp,str(norm))
+
+
+def test_Folds(list_of_foldnums, cv, points, m, norm, print_final_score=False):
+    for i in range(len(list_of_foldnums)):
+        accuracy = []
+        accuracy.append(cv.run_cv(points, list_of_foldnums[i], m, accuracy_score, print_final_score))
+        print("Accuracy of", norm.__name__, "is", accuracy[0])
+        print("")
 
 
 def normalized_check(points, k_list, normalize_method_list):
@@ -63,22 +71,20 @@ def normalized_check(points, k_list, normalize_method_list):
         for norm in normalize_method_list:
             norm_obj = norm()
             norm_obj.fit(points)
-            normelized_points= norm_obj.transform(points)
+            normelized_points = norm_obj.transform(points)
             cv = CrossValidation()
             test_Folds([2], cv, normelized_points, m, norm, print_final_score=False)
 
 
 def run_knn(points):
-    # m = KNN(19)
+    m = KNN(19)
+    m.train(points)
+    cv = CrossValidation()
+    print("Question 3:")
+    question3([2, 10, 20], cv, points, m, 7, print_final_score=False)
+    print("Question 4:")
+    normalized_check(points, [5, 7], [DummyNormalizer, SumNormalizer, MinMaxNormalizer, ZNormalizer])
 
-    # m.train(points)
-    # print(f'predicted class: {m.predict(points[0])}')
-    # print(f'true class: {points[0].label}')
-    # cv = CrossValidation()
-    # test_Folds([2, 10, 20], cv, points, m)
-    # print(temp)
-    # normalized_check(points, [5, 7], [DummyNormalizer, SumNormalizer, MinMax, ZNormalizer])
-    normalized_check(points, [5, 7], [DummyNormalizer, ZNormalizer, MinMax])
 
 if __name__ == '__main__':
     loaded_points = load_data()
